@@ -19,6 +19,16 @@ CREATE TABLE jobs (
   CONSTRAINT equity_check CHECK (equity < 1)
 );
 
+CREATE TABLE users (
+  username TEXT PRIMARY KEY,
+  password TEXT NOT NULL,
+  first_name TEXT NOT NULL,
+  last_name TEXT NOT NULL,
+  email TEXT NOT NULL UNIQUE,
+  photo_url TEXT,
+  is_admin BOOLEAN DEFAULT FALSE
+);
+
 INSERT INTO companies
   VALUES ('apple', 'Apple', 12, 'Maker of fruit.', 'https://www.mouthhealthy.org/~/media/MouthHealthy/Images/Resources/Lesson%20Plans/experiments_mouthhealthykids_apple.jpg'),
          ('ibm', 'IBM', 5, 'Big blue tires.', 'https://www.ibm.com/innovate/branding/logoartwork/logoartwork.nsf/IBM_logo_pos_CMYK.jpg');

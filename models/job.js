@@ -7,7 +7,6 @@ class Job {
 
   static async create(title, salary, equity, company_handle, date_posted) {
     try {
-      console.log(title, salary, equity, company_handle, date_posted);
       let result = await db.query(
         `INSERT INTO jobs (title, salary, equity, company_handle, date_posted)
         VALUES ($1, $2, $3, $4, $5)
@@ -20,7 +19,6 @@ class Job {
     }
   }
 
-
   // Now prevents SQL Injection;
 
   static async getAll(search, min_salary, min_equity) {
@@ -31,7 +29,7 @@ class Job {
     let result;
 
     if (search) {
-      values.push(search)
+      values.push(search);
       whereConditionArray.push(`title = $${counter}`);
       counter++;
     }
@@ -41,16 +39,16 @@ class Job {
       counter++;
     }
     if (min_equity) {
-      values.push(min_equity)
+      values.push(min_equity);
       whereConditionArray.push(`equity > $${counter}`);
       counter++;
-
     }
 
     if (whereConditionArray.length > 0) {
       result = await db.query(
-        `${queryString} WHERE ${whereConditionArray.join(" and ")} 
-        ORDER BY date_posted DESC`,values
+        `${queryString} WHERE ${whereConditionArray.join(" and ")}
+        ORDER BY date_posted DESC`,
+        values
       );
     } else {
       result = await db.query(`${queryString} ORDER BY date_posted DESC`);
@@ -84,8 +82,7 @@ class Job {
       } else {
         throw new ExpressError("Job not found", 404);
       }
-    }
-    catch (err) {
+    } catch (err) {
       throw new ExpressError("Incorrect body data!", 400);
     }
   }

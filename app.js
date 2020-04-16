@@ -6,6 +6,7 @@ const morgan = require("morgan");
 const app = express();
 const companyRoutes = require("./routes/companies.js");
 const jobRoutes = require("./routes/jobs.js");
+const userRoutes = require("./routes/users.js");
 app.use(express.json());
 
 // add logging system
@@ -13,6 +14,7 @@ app.use(morgan("tiny"));
 
 app.use("/companies", companyRoutes);
 app.use("/jobs", jobRoutes);
+app.use("/users", userRoutes);
 
 /** 404 handler */
 
@@ -29,7 +31,7 @@ app.use(function (req, res, next) {
 
 app.use(function (err, req, res, next) {
   res.status(err.status || 500);
-  if(process.env.NODE_ENV != "test"){
+  if (process.env.NODE_ENV != "test") {
     console.error(this.stack);
   }
 
