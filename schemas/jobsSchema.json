@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "http://example.com/example.json",
+  "type": "object",
+  "title": "The Root Schema",
+  "description": "The root schema comprises the entire JSON document.",
+  "default": {},
+  "additionalProperties": true,
+  "required": [
+      "title",
+      "salary",
+      "equity",
+      "company_handle"
+  ],
+  "properties": {
+      "title": {
+          "$id": "#/properties/title",
+          "type": "string",
+          "title": "The Title Schema",
+          "description": "An explanation about the purpose of this instance.",
+          "default": "",
+          "examples": [
+              "CFO"
+          ]
+      },
+      "salary": {
+          "$id": "#/properties/salary",
+          "type": "number",
+          "title": "The Salary Schema",
+          "description": "An explanation about the purpose of this instance.",
+          "default": 0,
+          "examples": [
+              69000.0
+          ]
+      },
+      "equity": {
+          "$id": "#/properties/equity",
+          "type": "number",
+          "title": "The Equity Schema",
+          "description": "An explanation about the purpose of this instance.",
+          "default": 0,
+          "examples": [
+              0.5
+          ]
+      },
+      "company_handle": {
+          "$id": "#/properties/company_handle",
+          "type": "string",
+          "title": "The Company_handle Schema",
+          "description": "An explanation about the purpose of this instance.",
+          "default": "",
+          "examples": [
+              "apple"
+          ]
+      },
+      "date_posted": {
+          "$id": "#/properties/date_posted",
+          "type": "string",
+          "title": "The Date_posted Schema",
+          "description": "An explanation about the purpose of this instance.",
+          "default": "",
+          "examples": [
+              "2004-05-23"
+          ]
+      }
+  }
+}

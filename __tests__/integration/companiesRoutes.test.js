@@ -1,8 +1,9 @@
 const db = require("../../db");
-const Company = require("../../models/company");
 const request = require("supertest");
 const app = require("../../app");
 process.env.NODE_ENV === "test";
+// const Company = require("../../models/company");
+
 
 const company1 = {
   handle: "handle1",
