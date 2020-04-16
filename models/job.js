@@ -16,7 +16,75 @@ class Job {
       );
       return result.rows[0];
     } catch (err) {
-      // throw new ExpressError(`Bad job input data!`, 400);
+      throw new ExpressError(`Bad job input data! ${err.message}`, 400);
+    }
+  }
+
+  static async getAll(search, min_salary, min_equity) {
+    let queryString = `SELECT title, company_handle FROM jobs`;
+    let whereConditionArray = [];
+    let result;
+
+    if (search) {
+      whereConditionArray.push(`title = '${search}'`);
+    }
+    if (min_salary) {
+      whereConditionArray.push(`salary > ${min_salary}`);
+    }
+    if (min_equity) {
+      whereConditionArray.push(`equity > ${min_equity}`);
+    }
+
+    if (whereConditionArray.length > 0) {
+      result = await db.query(
+        `${queryString} WHERE ${whereConditionArray.join(
+          " and "
+        )} ORDER BY date_posted DESC`
+      );
+    } else {
+      result = await db.query(`${queryString} ORDER BY date_posted DESC`);
+    }
+    return result.rows;
+  }
+
+  static async get(id) {
+    let result = await db.query(
+      `SELECT title, salary, equity, company_handle, date_posted
+      FROM jobs
+      WHERE id = $1`,
+      [id]
+    );
+    if (result.rows.length !== 0) {
+      return result.rows[0];
+    } else {
+      let error = new ExpressError(`Job of id ${id} doesn't exist`, 400);
+      throw error;
+    }
+  }
+
+  //updates the company using the helper function to create query string
+
+  static async update(id, results) {
+    let { query, values } = partialUpdate("jobs", results, "id", id);
+    let result = await db.query(`${query}`, values);
+    if (result.rows.length !== 0) {
+      return result.rows[0];
+    } else {
+      throw new ExpressError("Job not found", 404);
+    }
+  }
+
+  static async delete(id) {
+    let result = await db.query(
+      `DELETE FROM jobs
+      WHERE id=$1
+      RETURNING id`,
+      [id]
+    );
+    if (result.rows.length !== 0) {
+      return result.rows[0];
+    } else {
+      throw new ExpressError("Job not found", 404);
     }
   }
 }
