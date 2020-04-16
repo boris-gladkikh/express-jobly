@@ -61,7 +61,7 @@ router.patch("/:id", async function (req, res, next) {
       req.body,
       jobsUpdateSchema
     );
-
+    
     if (!validationResult.valid) {
       // pass validation errors to error handler
       //  (the "stack" key is generally the most useful)

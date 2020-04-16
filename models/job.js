@@ -20,26 +20,37 @@ class Job {
     }
   }
 
+
+  // Now prevents SQL Injection;
+
   static async getAll(search, min_salary, min_equity) {
     let queryString = `SELECT title, company_handle FROM jobs`;
     let whereConditionArray = [];
+    let counter = 1;
+    let values = [];
     let result;
 
     if (search) {
-      whereConditionArray.push(`title = '${search}'`);
+      values.push(search)
+      whereConditionArray.push(`title = $${counter}`);
+      counter++;
     }
     if (min_salary) {
-      whereConditionArray.push(`salary > ${min_salary}`);
+      values.push(min_salary);
+      whereConditionArray.push(`salary > $${counter}`);
+      counter++;
     }
     if (min_equity) {
-      whereConditionArray.push(`equity > ${min_equity}`);
+      values.push(min_equity)
+      whereConditionArray.push(`equity > $${counter}`);
+      counter++;
+
     }
 
     if (whereConditionArray.length > 0) {
       result = await db.query(
-        `${queryString} WHERE ${whereConditionArray.join(
-          " and "
-        )} ORDER BY date_posted DESC`
+        `${queryString} WHERE ${whereConditionArray.join(" and ")} 
+        ORDER BY date_posted DESC`,values
       );
     } else {
       result = await db.query(`${queryString} ORDER BY date_posted DESC`);
@@ -65,12 +76,17 @@ class Job {
   //updates the company using the helper function to create query string
 
   static async update(id, results) {
-    let { query, values } = partialUpdate("jobs", results, "id", id);
-    let result = await db.query(`${query}`, values);
-    if (result.rows.length !== 0) {
-      return result.rows[0];
-    } else {
-      throw new ExpressError("Job not found", 404);
+    try {
+      let { query, values } = partialUpdate("jobs", results, "id", id);
+      let result = await db.query(`${query}`, values);
+      if (result.rows.length !== 0) {
+        return result.rows[0];
+      } else {
+        throw new ExpressError("Job not found", 404);
+      }
+    }
+    catch (err) {
+      throw new ExpressError("Incorrect body data!", 400);
     }
   }
 

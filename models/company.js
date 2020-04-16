@@ -4,12 +4,15 @@ const ExpressError = require("../helpers/expressError.js");
 
 class Company {
   //static method to get all companies - has multiple optional params
-
   //returns handle, name, num_employees, description, logo_url
+  // Now prevents SQL Injection;
+
 
   static async getAll(search, min_employees, max_employees) {
     let queryString = `SELECT handle, name FROM companies`;
     let whereConditionArray = [];
+    let counter = 1;
+    let values = [];
     let result;
 
     if (min_employees && max_employees) {
@@ -19,18 +22,29 @@ class Company {
       }
     }
     if (search) {
-      whereConditionArray.push(`name = '${search}'`);
+
+      values.push(search);
+      whereConditionArray.push(`name = $${counter}`);
+      counter++;
+
+
     }
     if (min_employees) {
-      whereConditionArray.push(`num_employees > ${min_employees}`);
+
+      values.push(min_employees);
+      whereConditionArray.push(`num_employees > $${counter}`);
+      counter++;
+
     }
     if (max_employees) {
-      whereConditionArray.push(`num_employees < ${max_employees}`);
+      values.push(max_employees);
+      whereConditionArray.push(`num_employees < $${counter}`);
+      counter++;
     }
 
     if (whereConditionArray.length > 0) {
       result = await db.query(
-        `${queryString} WHERE ${whereConditionArray.join(" and ")}`
+        `${queryString} WHERE ${whereConditionArray.join(" and ")}`, values
       );
     } else {
       result = await db.query(`${queryString}`);
@@ -54,6 +68,8 @@ class Company {
     }
   }
 
+  //gets company by handle and returns all jobs with handle
+
   static async get(handle) {
     let result = await db.query(
       `SELECT handle, name, num_employees, description, logo_url
@@ -61,10 +77,19 @@ class Company {
       WHERE handle = $1`,
       [handle]
     );
-    if (result.rows.length !== 0) {
+
+    let resultJobs = await db.query(
+      `SELECT title, salary, equity, company_handle, date_posted
+      FROM jobs
+      WHERE company_handle = $1`,
+      [handle]
+    );
+
+    if (result.rows.length !== 0) {  
+      result.rows[0].jobs = resultJobs.rows;
       return result.rows[0];
     } else {
-      let error = new ExpressError(`${handle} company doesn't exist`, 400);
+      let error = new ExpressError(`${handle} company doesn't exist`, 404);
       throw error;
     }
   }

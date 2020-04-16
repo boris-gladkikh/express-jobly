@@ -1,7 +1,7 @@
 const db = require("../../db");
 const request = require("supertest");
 const app = require("../../app");
-process.env.NODE_ENV === "test";
+process.env.NODE_ENV = "test";
 // const Company = require("../../models/company");
 
 
@@ -119,7 +119,15 @@ describe("Testing Companies Routes", function () {
     let response = await request(app).get(`/companies/handle1`);
 
     expect(response.statusCode).toBe(200);
-    expect(response.body.company).toEqual(company1);
+    expect(response.body.company).toEqual({
+      handle: "handle1",
+      name: "name1",
+      num_employees: 1,
+      description: "description1",
+      jobs: [],
+      logo_url:
+        "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg",
+    });
   });
 
   test("PATCH update a company", async function () {

@@ -25,9 +25,13 @@ app.use(function (req, res, next) {
 
 /** general error handler */
 
+//TODO: wrap console.err in same if statement as expresserror.js statement
+
 app.use(function (err, req, res, next) {
   res.status(err.status || 500);
-  console.error(err.stack);
+  if(process.env.NODE_ENV != "test"){
+    console.error(this.stack);
+  }
 
   return res.json({
     status: err.status,
