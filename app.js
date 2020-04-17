@@ -7,6 +7,7 @@ const app = express();
 const companyRoutes = require("./routes/companies.js");
 const jobRoutes = require("./routes/jobs.js");
 const userRoutes = require("./routes/users.js");
+const authRoutes = require("./routes/auth.js");
 app.use(express.json());
 
 // add logging system
@@ -15,6 +16,7 @@ app.use(morgan("tiny"));
 app.use("/companies", companyRoutes);
 app.use("/jobs", jobRoutes);
 app.use("/users", userRoutes);
+app.use("/",authRoutes);
 
 /** 404 handler */
 
