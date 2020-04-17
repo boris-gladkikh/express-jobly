@@ -8,23 +8,30 @@
   "additionalProperties": false,
   "anyOf": [
     {
-      "required":["handle"]
+      "required": ["handle"]
     },
     {
-      "required":["name"]
+      "required": ["name"]
     },
     {
-      "required":["num_employees"]
+      "required": ["num_employees"]
     },
     {
-      "required":["description"]
+      "required": ["description"]
     },
     {
-      "required":["logo_url"]
+      "required": ["logo_url"]
     }
-
   ],
   "properties": {
+    "_token": {
+      "$id": "#/properties/_token",
+      "type": "string",
+      "title": "The token Schema",
+      "description": "An explanation about the purpose of this instance.",
+      "default": "",
+      "examples": ["gladkill"]
+    },
     "handle": {
       "$id": "#/properties/handle",
       "type": "string",
