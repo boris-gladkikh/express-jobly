@@ -74,7 +74,7 @@ class User {
         throw new ExpressError(`User ${username} not found`, 404);
       }
     } catch (err) {
-      throw new ExpressError("Incorrect body data!", 400);
+      throw new ExpressError("Incorrect body or user data!", 400);
     }
   }
 
